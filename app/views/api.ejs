@@ -1,0 +1,883 @@
+<% include header %>
+
+<div class="wrapper container">
+
+    <p class="flow-text">
+        Cette API utilise l'API Github pour rechercher un repository, accéder à un repository,
+        voir les contributeurs d'un repository, voir la contribution de chaque utilisateur sur les n derniers commits,
+        voir l'historique des n derniers commits.
+    </p>
+
+    <div class="app-desc">Version: 1.0.0</div>
+    <div class="prefix">Base de l'URL: <b>/api</b></div>
+    <a target="_blank" href="http://www.apache.org/licenses/LICENSE-2.0.html" class="license-info">Apache 2.0</a>
+
+    <div class="api-main-content">
+        <ul class="collapsible" data-collapsible="accordion">
+            <li>
+                <div class="collapsible-header">Search</div>
+                <div class="collapsible-body">
+                    <div class="method">
+                        <div class="method-path">
+                            <span class="method-operation">get</span>
+                            <span class="method-uri">/search</span>
+                            <span class="method-description">Recherche des repositories</span>
+                        </div>
+                        <div class="method-content">
+                            <div class="flow-text">Cette méthode permet de rechercher un ou plusieurs projets selon
+                                certains critères
+                                qui seront exposés ci-dessous. Les limites de cette API sont celle de l'API Github
+                                Search.
+                            </div>
+                            <div class="row">
+                                <div class="col s10">
+                                    <ul class="tabs">
+                                        <li class="tab col s3 blue lighten-4">
+                                            <a class="active white-text" href="#api-parameter-1">Paramètres</a>
+                                        </li>
+                                        <li class="tab col s3 blue lighten-4">
+                                            <a class="white-text" href="#api-repository-model">Réponse</a>
+                                        </li>
+                                        <li class="tab col s3 blue lighten-4">
+                                            <a class="white-text" href="#api-error-1">Erreur</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div id="api-parameter-1">
+                                <table class="bordered hoverable responsive-table centered api-table">
+                                    <thead>
+                                    <tr>
+                                        <th data-field="parameter">Paramètre</th>
+                                        <th data-field="value">Valeur</th>
+                                        <th data-field="description">Description</th>
+                                        <th data-field="parameterType">Type de paramètre</th>
+                                        <th data-field="dataType">Type de la donnée</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td>search</td>
+                                        <td>required</td>
+                                        <td>Le critère de recherche.</td>
+                                        <td>Query</td>
+                                        <td>string</td>
+                                    </tr>
+                                    <tr>
+                                        <td>projet</td>
+                                        <td>optional</td>
+                                        <td>
+                                            Précise dans quels champs s'effectuent
+                                            la recherche. Avec ce paramètre, on affine la recherche à la description, le
+                                            nom du projet, le README ou une combinaison des trois.
+                                            Prend une ou plusieurs des valeurs suivantes: name, description, readme
+                                        </td>
+                                        <td>Query</td>
+                                        <td>string</td>
+                                    </tr>
+                                    <tr>
+                                        <td>language</td>
+                                        <td>optional</td>
+                                        <td>
+                                            Langage du projet.
+                                        </td>
+                                        <td>Query</td>
+                                        <td>string</td>
+                                    </tr>
+                                    <tr>
+                                        <td>size</td>
+                                        <td>optional</td>
+                                        <td>
+                                            Cherche les projets qui ont une certaine taille (en MB).
+                                        </td>
+                                        <td>Query</td>
+                                        <td>integer (> 0)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>signSize</td>
+                                        <td>optional</td>
+                                        <td>
+                                            À utiliser avec le paramètre size. Prend une des valeurs suivantes, less
+                                            (strictement inférieur à la taille), greater
+                                            (supérieur ou égal à la taille), equal (égal à la taille)
+                                            ou limit (on passera le paramètre
+                                            limitSize pour spécifier une borne supérieure).
+                                        </td>
+                                        <td>Query</td>
+                                        <td>String</td>
+                                    </tr>
+                                    <tr>
+                                        <td>limitSize</td>
+                                        <td>optional</td>
+                                        <td>
+                                            Taille maximale (en MB).
+                                        </td>
+                                        <td>Query</td>
+                                        <td>Integer (> 0)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>forks</td>
+                                        <td>optional</td>
+                                        <td>
+                                            Cherche les projets en fonction du nombre de forks.
+                                        </td>
+                                        <td>Query</td>
+                                        <td>Integer (> 0)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>signForks</td>
+                                        <td>optional</td>
+                                        <td>
+                                            À utiliser avec le paramètre forks. Prend une des valeurs suivantes,
+                                            less
+                                            (strictement inférieur au nombre de forks), greater
+                                            (supérieur ou égal au nombre de forks), equal (égal au nombre de forks)
+                                            ou limit (on passera le paramètre limitForks pour spécifier une borne
+                                            supérieure).
+                                        </td>
+                                        <td>Query</td>
+                                        <td>String</td>
+                                    </tr>
+                                    <tr>
+                                        <td>limitForks</td>
+                                        <td>optional</td>
+                                        <td>
+                                            Nombre de forks maximum.
+                                        </td>
+                                        <td>Query</td>
+                                        <td>Integer (> 0)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>includeForks</td>
+                                        <td>optional</td>
+                                        <td>
+                                            Prend une des valeurs suivantes, true (inclus les projets forkés et
+                                            non forkés),
+                                            only (inclus seulement les projets forkés), false (inclus les projets non
+                                            forkés).
+                                        </td>
+                                        <td>Query</td>
+                                        <td>string</td>
+                                    </tr>
+                                    <tr>
+                                        <td>stars</td>
+                                        <td>optional</td>
+                                        <td>
+                                            Cherche les projets en fonction du nombre d'étoiles.
+                                        </td>
+                                        <td>Query</td>
+                                        <td>Integer (> 0)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>signStars</td>
+                                        <td>optional</td>
+                                        <td>
+                                            À utiliser avec le paramètre stars. Prend une des valeurs suivantes,
+                                            less
+                                            (strictement inférieur au nombre d'étoiles),
+                                            greater (supérieur ou égale au nombre d'étoiles), equal (égal au nombre
+                                            d'étoiles)
+                                            ou limit (on passera le
+                                            paramètre limitStars pour spécifier une borne supérieure).
+                                        </td>
+                                        <td>Query</td>
+                                        <td>String</td>
+                                    </tr>
+                                    <tr>
+                                        <td>limitStars</td>
+                                        <td>optional</td>
+                                        <td>
+                                            Nombre d'étoiles maximum
+                                        </td>
+                                        <td>Query</td>
+                                        <td>Integer (> 0)</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>date_submit</td>
+                                        <td>optional</td>
+                                        <td>
+                                            Cherche les projets en fonction de la date au format yyyy-mm-dd.
+                                        </td>
+                                        <td>Query</td>
+                                        <td>string</td>
+                                    </tr>
+                                    <tr>
+                                        <td>dateLabel</td>
+                                        <td>optional</td>
+                                        <td>
+                                            Prend les valeurs suivantes, "created" ou "pushed".
+                                        </td>
+                                        <td>Query</td>
+                                        <td>string</td>
+                                    </tr>
+                                    <tr>
+                                        <td>periodDate</td>
+                                        <td>optional</td>
+                                        <td>
+                                            À utiliser avec les paramètres
+                                            date_submit et dateLabel. Prend une des valeurs suivantes, before
+                                            (strictement
+                                            inférieur à la date),
+                                            after (supérieur ou égale à la date).
+                                        </td>
+                                        <td>Query</td>
+                                        <td>string</td>
+                                    </tr>
+                                    <tr>
+                                        <td>sort</td>
+                                        <td>optional</td>
+                                        <td>
+                                            Critère de tri. Prend une des valeurs suivantes, best_match, stars, forks,
+                                            or
+                                            updated.
+                                            Par défaut, les résultats sont triés par best_match.
+                                        </td>
+                                        <td>Query</td>
+                                        <td>string</td>
+                                    </tr>
+                                    <tr>
+                                        <td>order</td>
+                                        <td>optional</td>
+                                        <td>
+                                            Prend une des valeurs suivantes, asc ou desc. Par défaut, les résultats sont
+                                            triés
+                                            par ordre décroissant.
+                                        </td>
+                                        <td>Query</td>
+                                        <td>string</td>
+                                    </tr>
+                                    <tr>
+                                        <td>per_page</td>
+                                        <td>optional</td>
+                                        <td>
+                                            Nombre de commits retournés.
+                                        </td>
+                                        <td>Query</td>
+                                        <td>integer (> 0)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>page</td>
+                                        <td>optional</td>
+                                        <td>
+                                            Page de la requête.
+                                        </td>
+                                        <td>Query</td>
+                                        <td>integer (> 0)</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div id="api-repository-model">
+                                <h5>Type de retour</h5>
+                                <span>Object</span>
+
+                                <div class="model">
+                                    <h5>Repository</h5>
+
+                                    <div class="row">
+                                        <div class="col s12 m4 l4 offset-m2 offset-l2">
+                                            <div>
+                                                <b>Repository {</b>
+                                            </div>
+                                            <div class="model-param">id <span class="model-type">(integer)</span></div>
+                                            <div class="model-param">title<span class="model-type">(string)</span></div>
+                                            <div class="model-param">name<span class="model-type">(string)</span></div>
+                                            <div class="model-param">login<span class="model-type">(string)</span></div>
+                                            <div class="model-param">html_url<span class="model-type">(string)</span>
+                                            </div>
+                                            <div class="model-param">description<span class="model-type">(string)</span>
+                                            </div>
+                                            <div class="model-param">fork<span class="model-type">(boolean)</span></div>
+                                            <div class="model-param">created_at<span class="model-type">(date)</span>
+                                            </div>
+                                            <div class="model-param">updated_at<span class="model-type">(date)</span>
+                                            </div>
+                                            <div class="model-param">size<span class="model-type">(number)</span></div>
+                                            <div class="model-param">language<span class="model-type">(string)</span>
+                                            </div>
+                                            <div class="model-param">forks<span class="model-type">(integer)</span>
+                                            </div>
+                                            <div class="model-param">watchers<span>(integer)</span></div>
+                                            <b>}</b>
+                                        </div>
+                                        <div class="col s12 m6 l6">
+                                            <div>
+                                                <div><b>id:</b> identifiant unique représentant un projet</div>
+                                                <div><b>title:</b> Titre complet du projet (owner + nom).</div>
+                                                <div><b>name:</b> Nom du projet.</div>
+                                                <div><b>login:</b> Owner du projet</div>
+                                                <div><b>html_url:</b> URL du projet github.</div>
+                                                <div><b>description:</b> Description du projet.</div>
+                                                <div><b>fork:</b> Vrai si le projet est un fork, Faux sinon.</div>
+                                                <div><b>created_at:</b> Date de création du projet.</div>
+                                                <div><b>updated_at:</b> Date de dernière mise à jour du projet.</div>
+                                                <div><b>size:</b> Taille du projet en MB.</div>
+                                                <div><b>language:</b> Langage du projet.</div>
+                                                <div><b>forks:</b> Nombre de forks du projet.</div>
+                                                <div><b>watchers:</b> Nombre de vues du projet.</div>
+                                            </div>
+                                        </div>
+                                        <!-- field-items -->
+                                    </div>
+                                </div>
+                                <h5 class="field-label">Exemple</h5>
+
+                                <div class="">Content-Type: application/json</div>
+                                <div><a href="/api/search?search=javascript" target="_blank"
+                                        class="btn waves-effect waves-light">Exemple</a></div>
+                            </div>
+                            <div id="api-error-1">
+                                <div class="model">
+                                    <h5>Erreur</h5>
+
+                                    <div class="row">
+                                        <div class="col s12 m4 l4 offset-m2 offset-l2">
+                                            <b>Error {</b>
+
+                                            <div class="model-param">status<span>(integer)</span></div>
+                                            <div class="model-param">message<span>(string)</span></div>
+                                            <b>}</b>
+                                        </div>
+
+                                        <div class="col s12 m6 l6">
+                                            <div>
+                                                <div>status: code de l'erreur</div>
+                                                <div>message: message de l'erreur</div>
+                                            </div>
+                                            <!-- field-items -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li>
+                <div class="collapsible-header">Repository</div>
+                <div class="collapsible-body">
+                    <div class="method">
+                        <div class="method-path">
+                            <span class="method-operation">get</span>
+                            <span class="method-uri">/repos/{owner}/{name}</span>
+                            <span class="method-description">Donne les informations générales d'un projet</span>
+                        </div>
+                        <div class="method-content">
+                            <div class="flow-text">Renvoie un seul projet (Repository).</div>
+                            <div class="row">
+                                <div class="col s10">
+                                    <ul class="tabs">
+                                        <li class="tab col s3 blue lighten-4">
+                                            <a class="active white-text" href="#api-parameter-2">Paramètres</a>
+                                        </li>
+                                        <li class="tab col s3 blue lighten-4">
+                                            <a class="white-text" href="#api-repository-model-2">Réponse</a>
+                                        </li>
+                                        <li class="tab col s3 blue lighten-4">
+                                            <a class="white-text" href="#api-error-2">Erreur</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div id="api-parameter-2">
+                                <table class="bordered hoverable responsive-table centered api-table">
+                                    <thead>
+                                    <tr>
+                                        <th data-field="parameter">Paramètre</th>
+                                        <th data-field="value">Valeur</th>
+                                        <th data-field="description">Description</th>
+                                        <th data-field="parameterType">Type de paramètre</th>
+                                        <th data-field="dataType">Type de la donnée</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td>owner</td>
+                                        <td>required</td>
+                                        <td>Owner du projet.</td>
+                                        <td>Path</td>
+                                        <td>string</td>
+                                    </tr>
+                                    <tr>
+                                        <td>name</td>
+                                        <td>required</td>
+                                        <td>Nom du projet.</td>
+                                        <td>Path</td>
+                                        <td>string</td>
+                                    </tr>
+                                    <tr>
+                                        <td>per_page</td>
+                                        <td>optional</td>
+                                        <td>Nombre de projets retournés.</td>
+                                        <td>Query</td>
+                                        <td>string</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div id="api-repository-model-2">
+                                <h5>Type de retour</h5>
+                                <span>Repository</span>
+
+                                <div class="model">
+                                    <h5>Repository</h5>
+
+                                    <div class="row">
+                                        <div class="col s12 m4 l4 offset-m2 offset-l2">
+                                            <div>
+                                                <b>Repository {</b>
+                                            </div>
+                                            <div class="model-param">id <span>(integer)</span></div>
+                                            <div class="model-param">title<span>(string)</span></div>
+                                            <div class="model-param">name<span>(string)</span></div>
+                                            <div class="model-param">login<span>(string)</span></div>
+                                            <div class="model-param">html_url<span>(string)</span></div>
+                                            <div class="model-param">description<span>(string)</span>
+                                            </div>
+                                            <div class="model-param">fork<span>(boolean)</span></div>
+                                            <div class="model-param">created_at<span>(date)</span></div>
+                                            <div class="model-param">updated_at<span>(date)</span></div>
+                                            <div class="model-param">size<span>(number)</span></div>
+                                            <div class="model-param">language<span>(string)</span></div>
+                                            <div class="model-param">forks<span>(integer)</span></div>
+                                            <div class="model-param">watchers<span>(integer)</span></div>
+                                            <b>}</b>
+                                        </div>
+                                        <div class="col s12 m6 l6">
+                                            <div>
+                                                <div><b>id:</b> identifiant unique représentant un projet</div>
+                                                <div><b>title:</b> Titre complet du projet (owner + nom).</div>
+                                                <div><b>name:</b> Nom du projet.</div>
+                                                <div><b>login:</b> Owner du projet</div>
+                                                <div><b>html_url:</b> URL du projet github.</div>
+                                                <div><b>description:</b> Description du projet.</div>
+                                                <div><b>fork:</b> Vrai si le projet est un fork, Faux sinon.</div>
+                                                <div><b>created_at:</b> Date de création du projet.</div>
+                                                <div><b>updated_at:</b> Date de dernière mise à jour du projet.</div>
+                                                <div><b>size:</b> Taille du projet en MB.</div>
+                                                <div><b>language:</b> Langage du projet.</div>
+                                                <div><b>forks:</b> Nombre de forks du projet.</div>
+                                                <div><b>watchers:</b> Nombre de vues du projet.</div>
+                                            </div>
+                                        </div>
+                                        <!-- field-items -->
+                                    </div>
+                                </div>
+                                <h5 class="field-label">Exemple</h5>
+
+                                <div>Content-Type: application/json</div>
+                                <div><a href="/api/repos/airbnb/javascript" target="_blank"
+                                        class="btn waves-effect waves-light">Exemple</a></div>
+                            </div>
+                            <div id="api-error-2">
+                                <div class="model">
+                                    <h5>Erreur</h5>
+
+                                    <div class="row">
+                                        <div class="col s12 m4 l4 offset-m2 offset-l2">
+                                            <b>Error {</b>
+
+                                            <div class="model-param">status<span>(integer)</span></div>
+                                            <div class="model-param">message<span>(string)</span></div>
+                                            <b>}</b>
+                                        </div>
+
+                                        <div class="col s12 m6 l6">
+                                            <div>
+                                                <div>status: code de l'erreur</div>
+                                                <div>message: message de l'erreur</div>
+                                            </div>
+                                            <!-- field-items -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li>
+                <div class="collapsible-header">Contributors</div>
+                <div class="collapsible-body">
+                    <div class="method">
+                        <div class="method-path">
+                            <span class="method-operation">get</span>
+                            <span class="method-uri">/repos/{owner}/{name}/contributors</span>
+                            <span class="method-description">Contributeurs d'un projet</span>
+                        </div>
+                        <div class="method-content">
+
+                            <div class="flow-text">Renvoie la liste des contributeurs du projet</div>
+                            <div class="row">
+                                <div class="col s10">
+                                    <ul class="tabs">
+                                        <li class="tab col s3 blue lighten-4">
+                                            <a class="active white-text" href="#api-parameter-3">Paramètres</a>
+                                        </li>
+                                        <li class="tab col s3 blue lighten-4">
+                                            <a class="white-text" href="#api-contributor-model">Réponse</a>
+                                        </li>
+                                        <li class="tab col s3 blue lighten-4">
+                                            <a class="white-text" href="#api-error-3">Erreur</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div id="api-parameter-3">
+                                <table class="bordered hoverable responsive-table centered api-table">
+                                    <thead>
+                                    <tr>
+                                        <th data-field="parameter">Paramètre</th>
+                                        <th data-field="value">Valeur</th>
+                                        <th data-field="description">Description</th>
+                                        <th data-field="parameterType">Type de paramètre</th>
+                                        <th data-field="dataType">Type de la donnée</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td>owner</td>
+                                        <td>required</td>
+                                        <td>Owner du projet.</td>
+                                        <td>Path</td>
+                                        <td>string</td>
+                                    </tr>
+                                    <tr>
+                                        <td>name</td>
+                                        <td>required</td>
+                                        <td>Nom du projet.</td>
+                                        <td>Path</td>
+                                        <td>string</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div id="api-contributor-model">
+
+                                <h5>Type de retour</h5>
+
+                                <div><a href="#model-contributor">array[Contributor]</a></div>
+
+                                <div class="model">
+                                    <h5>Contributor</h5>
+
+                                    <div class="row">
+                                        <div class="col s12 m4 l4 offset-m2 offset-l2">
+                                            <div>
+                                                <b>Contributor {</b>
+                                            </div>
+                                            <div class="model-param">login<span>(string)</span></div>
+                                            <div class="model-param">avatar<span>(string)</span></div>
+                                            <div class="model-param">html_url<span>(string)</span></div>
+                                            <div class="model-param">type<span>(string)</span></div>
+                                            <div class="model-param">contributions<span>(integer)</span></div>
+                                            <b>}</b>
+
+                                        </div>
+                                        <div class="col s12 m6 l6">
+                                            <div>login: Identifiant unique repésentant un contributeur</div>
+                                            <div>avatar: URL de l'image représentant l'avatar de
+                                                l'utilisateur
+                                            </div>
+                                            <div>html_url: URL du contributeur sur Github.</div>
+                                            <div>type: Type de l'utilisateur.</div>
+                                            <div>contributions: Nombre de contributions de l'utilisateur.</div>
+                                        </div>
+                                    </div>
+
+                                    <h5 class="field-label">Exemple</h5>
+
+                                    <div>Content-Type: application/json</div>
+                                    <div><a href="/api/repos/airbnb/javascript/contributors" target="_blank"
+                                            class="btn waves-effect waves-light">Exemple</a></div>
+                                </div>
+
+                            </div>
+                            <div id="api-error-3">
+                                <div class="model">
+                                    <h5>Erreur</h5>
+
+                                    <div class="row">
+                                        <div class="col s12 m4 l4 offset-m2 offset-l2">
+                                            <b>Error {</b>
+
+                                            <div class="model-param">status<span>(integer)</span></div>
+                                            <div class="model-param">message<span>(string)</span></div>
+                                            <b>}</b>
+                                        </div>
+
+                                        <div class="col s12 m6 l6">
+                                            <div>
+                                                <div>status: code de l'erreur</div>
+                                                <div>message: message de l'erreur</div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li>
+                <div class="collapsible-header">Commits</div>
+                <div class="collapsible-body">
+                    <div class="method">
+                        <div class="method-path">
+                            <span class="method-operation">get</span>
+                            <span class="method-uri">/repos/{owner}/{name}/commits</span>
+                            <span class="method-description">Commits du projet</span>
+                        </div>
+                        <div class="method-content">
+                            <div class="flow-text">Renvoie les N derniers commits du projet</div>
+                            <div class="row">
+                                <div class="col s10">
+                                    <ul class="tabs">
+                                        <li class="tab col s3 blue lighten-4">
+                                            <a class="active white-text" href="#api-parameter-4">Paramètres</a>
+                                        </li>
+                                        <li class="tab col s3 blue lighten-4">
+                                            <a class="white-text" href="#api-commit-model">Réponse</a>
+                                        </li>
+                                        <li class="tab col s3 blue lighten-4">
+                                            <a class="white-text" href="#api-error-4">Erreur</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div id="api-parameter-4">
+                                <table class="bordered hoverable responsive-table centered api-table">
+                                    <thead>
+                                    <tr>
+                                        <th data-field="parameter">Paramètre</th>
+                                        <th data-field="value">Valeur</th>
+                                        <th data-field="description">Description</th>
+                                        <th data-field="parameterType">Type de paramètre</th>
+                                        <th data-field="dataType">Type de la donnée</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td>owner</td>
+                                        <td>required</td>
+                                        <td>Owner du projet.</td>
+                                        <td>Path</td>
+                                        <td>string</td>
+                                    </tr>
+                                    <tr>
+                                        <td>name</td>
+                                        <td>required</td>
+                                        <td>Nom du projet.</td>
+                                        <td>Path</td>
+                                        <td>string</td>
+                                    </tr>
+                                    <tr>
+                                        <td>per_page</td>
+                                        <td>optional</td>
+                                        <td>Nombre de commits retournés.</td>
+                                        <td>Query</td>
+                                        <td>string</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div id="api-commit-model">
+
+                                <h5 class="field-label">Type de retour</h5>
+
+                                <div class="return-type"><a href="#model-commit">array[Commit]</a></div>
+                                <div class="model">
+                                    <h3 class="field-label"><a name="Commit">Commit</a></h3>
+
+                                    <div class="row">
+                                        <div class="col s12 m4 l4 offset-m2 offset-l2">
+                                            <b>Commit {</b>
+
+                                            <div class="model-param">login<span>(string)</span></div>
+                                            <div class="model-param">avatar<span>(string)</span></div>
+                                            <div class="model-param">url<span>(string)</span></div>
+                                            <div class="model-param">sha<span>(string)</span></div>
+                                            <div class="model-param">date<span>(date)</span></div>
+                                            <div class="model-param">commit<span>(object)</span></div>
+                                            <b>}</b>
+                                        </div>
+
+                                        <div class="col s12 m6 l6">
+                                            <div>login: Login du contributeur ayant fait le commit</div>
+                                            <div>avatar: URL de l'image représentant l'avatar de l';utilisateur
+                                                ayant fait le
+                                                commit
+                                            </div>
+                                            <div>url: URL du commit sur Github.</div>
+                                            <div>sha: Clé SHA du commit.</div>
+                                            <div>date: Date du commit.</div>
+                                            <div>commit: Objet contenant beaucoup de propriétés d';un commit,
+                                                notamment
+                                                le message et l';auteur.
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <h5 class="field-label">Exemple</h5>
+
+                                <div>Content-Type: application/json</div>
+                                <div><a href="/api/repos/airbnb/javascript/commits" target="_blank"
+                                        class="btn waves-effect waves-light">Exemple</a></div>
+                            </div>
+                            <div id="api-error-4">
+                                <div class="model">
+                                    <h5>Erreur</h5>
+
+                                    <div class="row">
+                                        <div class="col s12 m4 l4 offset-m2 offset-l2">
+                                            <b>Error {</b>
+
+                                            <div class="model-param">status<span>(integer)</span></div>
+                                            <div class="model-param">message<span>(string)</span></div>
+                                            <b>}</b>
+                                        </div>
+
+                                        <div class="col s12 m6 l6">
+                                            <div>
+                                                <div>status: code de l'erreur</div>
+                                                <div>message: message de l'erreur</div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="method">
+                        <div class="method-path">
+                            <span class="method-operation">get</span>
+                            <span class="method-uri">/repos/{owner}/{name}/stats/commits</span>
+                            <span class="method-description">Commits du projet par utilisateur</span>
+                        </div>
+                        <div class="method-content">
+
+                            <div class="flow-text">Renvoie l'impact de chaque utilisateur basé sur leur N derniers
+                                commits.
+                            </div>
+                            <div class="row">
+                                <div class="col s10">
+                                    <ul class="tabs">
+                                        <li class="tab col s3 blue lighten-4">
+                                            <a class="active white-text" href="#api-parameter-5">Paramètres</a>
+                                        </li>
+                                        <li class="tab col s3 blue lighten-4">
+                                            <a class="white-text" href="#api-commit-stat-model">Réponse</a>
+                                        </li>
+                                        <li class="tab col s3 blue lighten-4">
+                                            <a class="white-text" href="#api-error-5">Erreur</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div id="api-parameter-5">
+                                <table class="bordered hoverable responsive-table centered api-table">
+                                    <thead>
+                                    <tr>
+                                        <th data-field="parameter">Paramètre</th>
+                                        <th data-field="value">Valeur</th>
+                                        <th data-field="description">Description</th>
+                                        <th data-field="parameterType">Type de paramètre</th>
+                                        <th data-field="dataType">Type de la donnée</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td>owner</td>
+                                        <td>required</td>
+                                        <td>Owner du projet.</td>
+                                        <td>Path</td>
+                                        <td>string</td>
+                                    </tr>
+                                    <tr>
+                                        <td>name</td>
+                                        <td>required</td>
+                                        <td>Nom du projet.</td>
+                                        <td>Path</td>
+                                        <td>string</td>
+                                    </tr>
+                                    <tr>
+                                        <td>per_page</td>
+                                        <td>optional</td>
+                                        <td>Nombre de commits retournés.</td>
+                                        <td>Query</td>
+                                        <td>string</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div id="api-commit-stat-model">
+                                <h5 class="field-label">Type de retour</h5>
+
+                                <div class="return-type"><a href="#model-commit-stat">array[CommitStat]</a></div>
+
+                                <div class="model">
+                                    <h5>CommitStat</h5>
+
+                                    <div class="row">
+                                        <div class="col s12 m4 l4 offset-m2 offset-l2">
+                                            <b>CommitStat {</b>
+
+                                            <div class="model-param">label<span>(string)</span></div>
+                                            <div class="model-param">value<span>(string)</span></div>
+                                            <div class="model-param">color<span>(string)</span></div>
+                                            <b>}</b>
+                                        </div>
+
+                                        <div class="col s12 m6 l6">
+                                            <div>label: Auteur du commit</div>
+                                            <div>value: Nombre de commits</div>
+                                            <div>color: Couleur au format héxadécimal.</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <h5 class="field-label">Exemple</h5>
+
+                                <div class="example-data-content-type">Content-Type: application/json</div>
+                                <div><a href="/api/repos/airbnb/javascript/stats/commits" target="_blank"
+                                        class="btn waves-effect waves-light">Exemple</a></div>
+                            </div>
+                            <div id="api-error-5">
+                                <div class="model">
+                                    <h5>Erreur</h5>
+
+                                    <div class="row">
+                                        <div class="col s12 m4 l4 offset-m2 offset-l2">
+                                            <b>Error {</b>
+
+                                            <div class="model-param">status<span>(integer)</span></div>
+                                            <div class="model-param">message<span>(string)</span></div>
+                                            <b>}</b>
+                                        </div>
+
+                                        <div class="col s12 m6 l6">
+                                            <div>
+                                                <div>status: code de l'erreur</div>
+                                                <div>message: message de l'erreur</div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+<% include footer %>

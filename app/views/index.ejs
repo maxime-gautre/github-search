@@ -1,0 +1,206 @@
+<% include header %>
+
+<div class="container wrapper">
+    <div id="classicSearch" class="section">
+        <form method="get" action="/search" class="col s12">
+            <div class="row">
+                <div class="input-field col s10 m7 offset-m2 l7 offset-l2">
+                    <input id="search" name="search" type="text" class="validate" required="required">
+                    <label for="search">Recherche</label>
+                </div>
+                <div class="col s2 m2 l2 input-field">
+                    <button class="btn btn-floating waves-effect waves-light" type="submit">
+                        <i class="mdi-action-search"></i>
+                    </button>
+                    <button id="buttonAdvancedSearch" class="btn btn-floating waves-effect waves-light" type="button">
+                        <i class="fa fa-plus" style="font-size: 18px;"></i>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <form method="get" action="/search" class="col s12">
+        <div id="advancedSearch" class="section" style="display: none;">
+            <div class="row">
+                <h5>Recherche avancée</h5>
+
+                <div class="divider"></div>
+            </div>
+
+            <div class="row">
+                <div class="input-field col s10 m7 offset-m2 l7 offset-l2">
+                    <input id="search" name="search" type="text" class="validate" required="required">
+                    <label for="search">Recherche</label>
+                </div>
+                <div class="col s2 m2 l2 input-field">
+                    <button class="btn btn-floating waves-effect waves-light" type="submit">
+                        <i class="mdi-action-search"></i>
+                    </button>
+                    <button id="hideAdvancedSearch" class="btn btn-floating waves-effect waves-light" type="button">
+                        <i class="fa fa-minus" style="font-size: 18px;"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s12 m6 l6">
+                    <label for="sort">Trier par : </label>
+                    <select name="sort" id="sort">
+                        <option value="best_match">Pertinence</option>
+                        <option value="stars">Popularité</option>
+                        <option value="forks">Forks</option>
+                        <option value="updated">Date de mise à jour</option>
+                    </select>
+                </div>
+                <div class="col s12 m6 l6">
+                    <label for="order">Ordre : </label>
+                    <select id="order" name="order">
+                        <option value="desc">Décroissant</option>
+                        <option value="asc">Croissant</option>
+                    </select>
+                </div>
+            </div>
+            <br/>
+
+            <div class="row">
+                <div class="col s12 m6 l6">
+                    <p>Recherche dans : </p>
+
+                    <p>
+                        <input type="checkbox" id="projectName" name="project" checked="checked" value="name"/>
+                        <label for="projectName">Nom du projet</label>
+                    </p>
+
+                    <p>
+                        <input type="checkbox" id="projectDescription" name="project" checked="checked"
+                               value="description"/>
+                        <label for="projectDescription">Description du projet</label>
+                    </p>
+
+                    <p>
+                        <input type="checkbox" id="projectReadme" name="project" value="readme"/>
+                        <label for="projectReadme">README</label>
+                    </p>
+                </div>
+                <div class="input-field col s12 m6 l6">
+                    <input id="language" name="language" type="text" class="validate">
+                    <label for="language">Langage</label>
+                </div>
+            </div>
+            <br/>
+
+            <div class="row">
+                <div class="col s12 m6 l6">
+                    <div class="input-field col s10 m12 l6">
+                        <input id="size" name="size" type="text" pattern="\d+" class="validate">
+                        <label for="size">Taille (MB)</label>
+
+                        <p>
+                            <input name="signSize" type="radio" id="lessThanSize" value="less" checked/>
+                            <label for="lessThanSize">Strictement inférieur à </label>
+                            <input name="signSize" type="radio" id="equalSize" value="equal"/>
+                            <label for="equalSize">Égal à</label>
+                            <input name="signSize" type="radio" id="greaterThanSize" value="greater"/>
+                            <label for="greaterThanSize">Superieur ou égal à</label>
+                            <input name="signSize" type="radio" id="maxSize" value="limit"/>
+                            <label for="maxSize">Spécifier une borne maximum</label>
+                        </p>
+                    </div>
+                    <div class="input-field col s12 m12 l6">
+                        <input id="limitSize" type="text" pattern="\d+" class="validate" name="limitSize"
+                               disabled="disabled">
+                        <label for="limitSize">Borne supérieure</label>
+                    </div>
+                </div>
+                <div class="col s12 m6 l6">
+                    <div class="input-field col s10 m12 l6">
+                        <input id="stars" name="stars" type="text" pattern="\d+" class="validate">
+                        <label for="stars">Nombre de vues</label>
+
+                        <p>
+                            <input name="signStars" type="radio" id="lessThanStars" value="less" checked/>
+                            <label for="lessThanStars">Strictement inférieur à </label>
+                            <input name="signStars" type="radio" id="equalStars" value="equal"/>
+                            <label for="equalStars">Égal à</label>
+                            <input name="signStars" type="radio" id="greaterThanStars" value="greater"/>
+                            <label for="greaterThanStars">Supérieur ou égal à</label>
+                            <input name="signStars" type="radio" id="maxStars" value="limit"/>
+                            <label for="maxStars">Spécifier une borne maximum</label>
+                        </p>
+                    </div>
+                    <div class="input-field col s12 m12 l6">
+                        <input id="limitStars" name="limitStars" type="text" pattern="\d+" class="validate"
+                               disabled="disabled">
+                        <label for="limitStars">Borne supérieure</label>
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <br/>
+            <div class="row">
+                <div class="col s12 m6 l6">
+                    <div class="input-field col s10 m12 l6">
+                        <input id="forks" name="forks" type="text" pattern="\d+" class="validate">
+                        <label for="forks">Forks</label>
+
+                        <p>
+                            <input name="signForks" type="radio" id="lessThanForks" value="less" checked/>
+                            <label for="lessThanForks">Strictement inférieur à </label>
+                            <input name="signForks" type="radio" id="equalForks" value="equal"/>
+                            <label for="equalForks">Égal à</label>
+                            <input name="signForks" type="radio" id="greaterThanForks" value="greater"/>
+                            <label for="greaterThanForks">Superieur ou égal à</label>
+                            <input name="signForks" type="radio" id="maxForks" value="limit"/>
+                            <label for="maxForks">Spécifier une borne maximum</label>
+                        </p>
+                    </div>
+                    <div class="input-field col s12 m12 l6">
+                        <input id="limitForks" name="limitForks" type="text" pattern="\d+" class="validate"
+                               disabled="disabled">
+                        <label for="limitForks">Borne supérieure</label>
+
+                        <p>
+                            <input name="includeForks" type="radio" id="includeForksT" value="true"
+                                   checked/>
+                            <label for="includeForksT">Inclure les forks </label>
+                            <input name="includeForks" type="radio" id="includeForksOnly"
+                                   value="only"/>
+                            <label for="includeForksOnly">Uniquement les forks</label>
+                            <input name="includeForks" type="radio" id="notIncludeForks"
+                                   value="false"/>
+                            <label for="notIncludeForks">Ne pas inclure les forks</label>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col s12 m6 l6">
+                    <label for="dateLabel">Label : </label>
+                    <select id="dateLabel" name="dateLabel">
+                        <option value="created">Créé le</option>
+                        <option value="pushed">Mis à jour le</option>
+                    </select>
+
+                    <div>
+                        <label for="date">Date</label>
+                        <input id="date" name="date" type="date" class="datepicker">
+                    </div>
+
+                    <p>
+                        <input name="periodDate" type="radio" id="lessThanDate" value="before" checked/>
+                        <label for="lessThanDate">Strictement inférieur à </label>
+                        <input name="periodDate" type="radio" id="greaterThanDate" value="after"/>
+                        <label for="greaterThanDate">Supérieur ou égal à</label>
+                    </p>
+                </div>
+            </div>
+            <br/>
+            <br/>
+            <div class="center-align">
+                <button class="btn waves-effect waves-light" type="submit">
+                    Rechercher
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+<% include footer %>

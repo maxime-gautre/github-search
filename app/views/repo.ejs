@@ -1,0 +1,210 @@
+<% include header %>
+
+<div class="teal lighten-2">
+    <div class="container row">
+        <ul class="tabs">
+            <li class="tab col s12 m3 l3 teal lighten-2"><a class="active white-text" href="#projet">
+                    <i class="fa fa-th-list"></i> Projet
+                </a>
+            </li>
+            <li class="tab col s12 m3 l3 teal lighten-2">
+                <a class="white-text" href="#contributors">
+                    <i class="fa fa-users"></i> Contributeurs
+                </a>
+            </li>
+            <li class="tab col s12 m3 l3 teal lighten-2">
+                <a class="white-text" href="#statistics" id="statsLink">
+                    <i class="fa fa-pie-chart"></i> Statistiques
+                </a>
+            </li>
+            <li class="tab col s12 m3 l3 teal lighten-2">
+                <a class="white-text" href="#timeline" id="timelineLink">
+                    <i class="fa fa-history"></i> Historique
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="container wrapper">
+    <div class="row">
+        <div class="col s12 item-main blue-text text-lighten-1">
+            <h4><span id="repoName"><%= data.repository.name %></span></h4>
+            <h5>
+                <i class="fa fa-user"></i>
+                <span id="repoLogin"><%= data.repository.login %></span>
+            </h5>
+            <input type="hidden" id="repoId" value="<%= data.repository.id %>" disabled="disabled"/>
+
+            <div>
+                <button class="btn btn-flat waves-effect tooltipped" data-position="right" data-delay="50"
+                        data-tooltip="Ajouter aux favoris" type="button" id="saveRepo">
+                    <i class="large mdi-content-save blue-text text-lighten-1 icon-hover"></i>
+                </button>
+                <button class="btn btn-flat waves-effect tooltipped" data-position="right" data-delay="50"
+                        data-tooltip="Supprimer des favoris" type="button" id="deleteRepo">
+                    <i class="large mdi-action-delete red-text text-lighten-1 icon-hover"></i>
+                </button>
+            </div>
+        </div>
+        <div id="projet">
+            <div class="col s12 m10 l10 ">
+                <div class="item-description">
+                    <p><%= data.repository.description %></p>
+
+                    <div class="item-date">
+                        Créé le <span><%= formatDate(data.repository.created_at, 'DD MMMM YYYY') %></span>
+                    </div>
+                    <div class="item-date">
+                        Dernière mise à jour le
+                        <span><%= formatDate(data.repository.updated_at, 'DD MMMM YYYY') %></span>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col m2 l2 right-align hide-on-small-only">
+                <ul>
+                    <li class="blue-text text-lighten-1 tooltipped" data-position="right" data-delay="50"
+                        data-tooltip="Langage">
+                        <i class="fa fa-code"></i> <%= data.repository.language %>
+                    </li>
+                    <li class="red-text text-lighten-1 tooltipped" data-position="right" data-delay="50"
+                        data-tooltip="Forks">
+                        <i class="fa fa-code-fork"></i> <%= data.repository.forks %>
+                    </li>
+                    <li class="teal-text text-lighten-1 tooltipped" data-position="right" data-delay="50"
+                        data-tooltip="Vues">
+                        <i class="mdi-image-remove-red-eye"></i>
+                        <%= data.repository.watchers %>
+                    </li>
+                </ul>
+            </div>
+            <div class="col s12 center-align hide-on-med-and-up">
+                <div class="small-padding">
+
+                                <span class="blue-text text-lighten-1">
+                                    <i class="fa fa-code"></i>
+                                    <span id="repoLanguage"><%= data.repository.language %></span>
+                                </span>
+                    &nbsp;
+                                <span class="red-text text-lighten-1">
+                                    <i class="fa fa-code-fork"></i> <%= data.repository.forks %>
+                                </span>
+                    &nbsp;
+                                <span class="teal-text text-lighten-1">
+                                    <i class="mdi-image-remove-red-eye"></i>
+                                    <%= data.repository.watchers %>
+                                </span>
+                </div>
+            </div>
+            <div class="col s12 m12 l12 center-align">
+                <div class="small-padding text-white">
+                    <a class="waves-effect waves-light btn" href="<%= data.repository.html_url %>" target="_blank">
+                        <i class="fa fa-github left"></i> Github
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div id="contributors" class="col s12">
+            <div class="section">
+                <ul class="collection">
+                    <% data.contributors.forEach(function (el) { %>
+                    <li class="collection-item avatar">
+                        <img src="<%= el.avatar %>" alt="" class="circle">
+                        <span class="title"><%= el.login %></span>
+
+                        <p>
+                            <%= el.type %>
+                        </p>
+                            <span class="secondary-content tooltipped" data-position="right" data-delay="50"
+                                  data-tooltip="Contributions">
+                                <i class="mdi-action-grade"></i> <%= el.contributions %>
+                            </span>
+                    </li>
+                    <% }); %>
+                </ul>
+            </div>
+        </div>
+        <div id="statistics" class="col s12">
+            <div class="row">
+                <div class="col s12 m8 offset-m2 l8 offset-l2">
+                    <p class="center-align flow-text">
+                        Ces graphiques représentent l'impact de chaque utilisateur sur le projet, basé sur le nombre de commit.
+                    </p>
+                </div>
+            </div>
+            <div class="chart-table center-align">
+                <div class="row">
+                    <div class="col s12 m6 l6">
+                        <canvas id="myChart" width="300" height="300"></canvas>
+                    </div>
+                    <div class="col s12 m6 l6">
+                        <canvas id="myChart2" width="300" height="300"></canvas>
+                    </div>
+                </div>
+                <table class="bordered hoverable responsive-table">
+                    <thead>
+                    <tr>
+                        <th data-field="name">Auteur</th>
+                        <th data-field="commits">Nombre de commits</th>
+                        <th data-field="percent">Pourcentage</th>
+                        <th data-field="color">color</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <% data.commitStats.forEach(function(el) { %>
+                    <tr>
+                        <td><%= el.label %></td>
+                        <td><%= el.value %></td>
+                        <td><%= el.value %>%</td>
+                        <td style="background-color: <%= el.color %>"></td>
+                    </tr>
+                    <% }); %>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+        <div id="timeline" class="col s12">
+            <div class="row">
+                <div class="col s12 m8 offset-m2 l8 offset-l2">
+                    <p class="center-align flow-text">
+                        Scrollez pour voir l'historique du projet à travers les commits des différents contributeurs.
+                    </p>
+                </div>
+            </div>
+            <section id="cd-timeline" class="cd-container">
+                <% data.commits.forEach(function(el){ %>
+                <div class="cd-timeline-block">
+                    <div class="cd-timeline-img">
+                        <img class="circle responsive-img" src="<%= el.avatar || '/img/default-avatar.png' %>">
+                    </div>
+                    <div class="cd-timeline-content">
+                        <h2><%= el.login %> - <%= el.commit.committer.name %></h2>
+
+                        <p><%= el.commit.message %></p>
+                        <span class="cd-date"><%= formatDate(el.date, 'DD MMMM YYYY, HH:mm') %></span>
+                    </div>
+                </div>
+                <% }); %>
+            </section>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    var dataChart = <%- JSON.stringify(data.commitStats) %>;
+    var ctx = document.getElementById("myChart").getContext("2d");
+    var ctx2 = document.getElementById("myChart2").getContext("2d");
+    var myNewChart = new Chart(ctx).PolarArea(dataChart);
+    var myPieChart = new Chart(ctx2).Pie(dataChart);
+    $("#statsLink").click(function () {
+
+        setTimeout(function () {
+            myNewChart.render();
+            myPieChart.render();
+        })
+    });
+</script>
+<% include footer %>

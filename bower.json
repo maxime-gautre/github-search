@@ -1,0 +1,16 @@
+{
+  "name": "github-search-v2",
+  "version": "0.0.1",
+  "dependencies": {
+	"jquery": "latest",
+	"materialize": "latest",
+    "components-font-awesome": "latest",
+    "Chart.js": "latest",
+    "promise-polyfill": "latest"
+  },
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "components"
+  ]
+}

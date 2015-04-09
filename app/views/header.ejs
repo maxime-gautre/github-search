@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title><%- title %></title>
+    <link rel="stylesheet" href="/css/materialize.css"/>
+    <link rel="stylesheet" href="/css/font-awesome.css"/>
+    <link rel="stylesheet" href="/css/style.css">
+    <% if (ENV_DEVELOPMENT) { %>
+    <script src="http://localhost:35729/livereload.js"></script>
+    <% } %>
+
+    <script type="text/javascript" src="/js/promise.js"></script>
+    <script type="text/javascript" src="/js/jquery.js"></script>
+    <script type="text/javascript" src="/js/chart.js"></script>
+    <script type="text/javascript" src="/js/materialize.js"></script>
+    <script src="/js/ejs.js"></script>
+    <script type="text/javascript" src="/js/indexeddb.js"></script>
+    <script type="text/javascript" src="/js/globalFunction.js"></script>
+    <script type="text/javascript" src="/js/scriptApp.js"></script>
+
+</head>
+<body>
+
+<nav id="nav" class="grey darken-3">
+    <div class="container nav-wrapper">
+        <a href="/" class="brand-logo"><i class="fa fa-github"></i></a>
+        <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="mdi-navigation-menu"></i></a>
+        <ul class="right hide-on-med-and-down">
+            <li class="tooltipped item-header" data-position="bottom" data-delay="50" data-tooltip="Favoris">
+                <a href="#" id="toggle-bookmarks"><i class="large mdi-action-stars"></i></a>
+            </li>
+            <li class="tooltipped item-header" data-position="bottom" data-delay="50" data-tooltip="Recherche">
+                <a href="#" id="toggle-search"><i class="large mdi-action-search"></i></a>
+            </li>
+            <li class="tooltipped item-header" data-position="bottom" data-delay="50" data-tooltip="Documentation API">
+                <a href="/doc/api" >API</a>
+            </li>
+        </ul>
+        <ul class="side-nav" id="mobile-demo">
+            <li>
+                <a href="#" id="toggle-bookmarks"><i class="large mdi-action-stars"></i></a>
+            </li>
+            <li><a href="#" id="toggle-search"><i class="large mdi-action-search"></i></a></li>
+        </ul>
+    </div>
+</nav>
+<div class="toggles">
+    <div class="row white-text grey darken-3" id="search">
+        <div class="container">
+            <form action="/search" method="get">
+                <input class="form-control" type="text" name="search" placeholder="Search ..." required="required">
+            </form>
+        </div>
+    </div>
+    <div class="row grey darken-3" id="savedRepos">
+        <div class="container">
+            <div id="reposList" class="bookmarks"></div>
+        </div>
+    </div>
+</div>
+
